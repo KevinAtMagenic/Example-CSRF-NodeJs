@@ -2,10 +2,17 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var cookie = require("cookie-session");
 var csrf = require('csurf');
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+
+ app.use(cookie('keyboard cat'));
+ app.use(session({
+  secret: 'keyboard cat'   
+ }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
