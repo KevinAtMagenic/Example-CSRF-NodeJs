@@ -1,0 +1,16 @@
+{
+  "name": "example-csrf-express",
+  "version": "1.0.0",
+  "description": "Prototype of using Node Express Backend",
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "cd server && nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "dev:server": "cd client && yarn build && cd ..\\server && yarn start",
+    "start": "cd server && node server.js",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  }
+}
