@@ -9,7 +9,7 @@
     "dev:server": "cd client && yarn build && cd ..\\server && yarn start",
     "start": "cd server && node server.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
-    "i": "cd client && npm install && cd ..\\server && yarn start"
+    "i": "cd client && yarn install && cd ..\\server && yarn install"
   },
   "devDependencies": {
     "concurrently": "^4.1.0"
