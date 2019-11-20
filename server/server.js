@@ -21,9 +21,9 @@ app.use(csrf({
 // API calls
 app.get('/api/hello', (req, res) => {
   let token = req.csrfToken();
-  res.cookie('mytest', 'mytestvalue');
-  res.cookie('mytoken', token);
-  res.cookie('_csrf-my-app', token);
+  //res.cookie('mytest', 'mytestvalue');
+  //res.cookie('mytoken', token);
+  //res.cookie('_csrf-my-app', token);
   res.send(
     { 
       express: 'Hello From Express',

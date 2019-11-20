@@ -13,7 +13,7 @@ class App extends Component {
   componentDidMount() {
     this.callApi()
       .then((res) => {
-        this.setCookie('_csrf-my-app', res.csrfToken, 365);
+        //this.setCookie('_csrf-my-app', res.csrfToken, 365);
         this.setState({ response: res.express, csrfToken: res.csrfToken, documentCookies: document.cookie });
       })
       .catch(err => console.log(err));
