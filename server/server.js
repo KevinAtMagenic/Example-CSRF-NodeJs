@@ -6,24 +6,15 @@ var csrf = require('csurf');
 
 const app = express();
 const port = process.env.PORT || 5000;
-
+const csrfProtection = csrf({ cookie: true})
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(csrf({
-  cookie: {
-    key: '_csrf-my-app',
-    secure: process.env.NODE_ENV === 'production'
-  }
-}));
-
 // API calls
-app.get('/api/hello', (req, res) => {
-  let token = req.csrfToken();
-  res.cookie('mytest', 'mytestvalue');
-  res.cookie('mytoken', token);
-  res.cookie('_csrf-my-app', token);
+app.get('/api/hello', csrfProtection, (req, res) => {
+  let token = req.csrfToken({ cookie: true });
+  res.cookie('CSRF_TOKEN', token)
   res.send(
     { 
       express: 'Hello From Express',
@@ -31,7 +22,7 @@ app.get('/api/hello', (req, res) => {
  });
 });
 
-app.post('/api/world', (req, res) => {
+app.post('/api/world', csrfProtection, (req, res) => {
   console.log(req.body);
   res.send(
     `I received your POST request. This is what you sent me: ${req.body.post}`,

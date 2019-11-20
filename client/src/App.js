@@ -4,37 +4,30 @@ import './App.css';
 
 class App extends Component {
   state = {
-    response: '',
+    response: null,
     post: 'example',
-    responseToPost: '',
-    csrfToken: 'notyet'
+    csrfToken: null
   };
 
   componentDidMount() {
     this.callApi()
       .then((res) => {
-        this.setCookie('_csrf-my-app', res.csrfToken, 365);
-        this.setState({ response: res.express, csrfToken: res.csrfToken, documentCookies: document.cookie });
+        this.setState({ response: res.express, csrfToken: res.csrfToken});
       })
       .catch(err => console.log(err));
   }
 
-  setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
-
   callApi = async () => {
     const response = await fetch('/api/hello', {
-      credentials: "include"
+      credentials: "same-origin"
     });
     const body = await response.json();
-    this.setState({ serverCookies: response.cookie });
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
+    if (response.status !== 200) { 
+      throw Error(body.message);
+    } else {
+      return body;
+    }
+    
   };
 
   handleSubmit = async e => {
@@ -44,11 +37,10 @@ class App extends Component {
       credentials: 'include', // <-- includes cookies in the request
       headers: {
         'Content-Type': 'application/json',
-        'CSRF-Token': `'${this.state.csrfToken}'`
+        'X-CSRF-Token': this.state.csrfToken
       },
       body: JSON.stringify({ post: this.state.post }),
     });
-    this.setState({requestHeader: `'CSRF-Token': ${this.state.csrfToken}`});
 
     if(response.status === "200") {
       this.setState({ responseToPost: await response.text() });
@@ -77,11 +69,7 @@ class App extends Component {
           />
           <button type="submit">Submit</button>
         </form>
-        <p>Server Response: <div dangerouslySetInnerHTML={{__html: this.state.responseToPost}} /></p>
         <p>Token: [{this.state.csrfToken}]</p>
-        <p>Request Header: [{this.state.requestHeader}]</p>
-        <p>Server Cookies: [{this.state.serverCookies}]</p>
-        <p>Document Cookies: [{this.state.documentCookies}]</p>
       </div>
     );
   }
