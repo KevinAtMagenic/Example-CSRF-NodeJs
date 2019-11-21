@@ -13,6 +13,7 @@ class App extends Component {
     this.callApi()
       .then((res) => {
         this.setState({ response: res.express, csrfToken: res.csrfToken});
+        // this.setState({ response: res.express, csrfToken: 'bogus'});
       })
       .catch(err => console.log(err));
   }
@@ -26,8 +27,7 @@ class App extends Component {
       throw Error(body.message);
     } else {
       return body;
-    }
-    
+    }    
   };
 
   handleSubmit = async e => {
@@ -70,6 +70,8 @@ class App extends Component {
           <button type="submit">Submit</button>
         </form>
         <p>Token: [{this.state.csrfToken}]</p>
+        <p>Response from Server: [{this.state.responseToPost}]</p>
+      
       </div>
     );
   }

@@ -5,19 +5,19 @@ var cookieParser = require('cookie-parser');
 var csrf = require('csurf');
 
 const app = express();
-const port = process.env.PORT || 5000;
+//const port = process.env.PORT || 5000;
+const port = 5000;
 const csrfProtection = csrf({ cookie: true})
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // API calls
 app.get('/api/hello', csrfProtection, (req, res) => {
   let token = req.csrfToken({ cookie: true });
-  res.cookie('CSRF_TOKEN', token)
+  //res.cookie('CSRF_TOKEN', token)
   res.send(
     { 
-      express: 'Hello From Express',
       csrfToken: token
  });
 });
@@ -29,14 +29,14 @@ app.post('/api/world', csrfProtection, (req, res) => {
   );
 });
 
-if (process.env.NODE_ENV === 'production') {
-  // Serve any static files
-  app.use(express.static(path.join(__dirname, 'client/build')));
+// if (process.env.NODE_ENV === 'production') {
+//   // Serve any static files
+//   app.use(express.static(path.join(__dirname, 'client/build')));
 
-  // Handle React routing, return all requests to React app
-  app.get('*', function(req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
-}
+//   // Handle React routing, return all requests to React app
+//   app.get('*', function(req, res) {
+//     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+//   });
+// }
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
