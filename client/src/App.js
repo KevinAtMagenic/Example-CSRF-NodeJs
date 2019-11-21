@@ -21,8 +21,8 @@ class App extends Component {
 
   setCookie(cname, cvalue, exdays) {
     var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
 
@@ -44,18 +44,18 @@ class App extends Component {
       credentials: 'include', // <-- includes cookies in the request
       headers: {
         'Content-Type': 'application/json',
-        'CSRF-Token': `'${this.state.csrfToken}'`
+        'CSRF-Token': this.state.csrfToken
       },
       body: JSON.stringify({ post: this.state.post }),
     });
-    this.setState({requestHeader: `'CSRF-Token': ${this.state.csrfToken}`});
+    this.setState({ requestHeader: `'CSRF-Token': ${this.state.csrfToken}` });
 
-    if(response.status === "200") {
+    if (response.status === "200") {
       this.setState({ responseToPost: await response.text() });
     }
     else {
       this.setState({ responseToPost: await response.text() });
-    }    
+    }
   };
 
   render() {
@@ -63,7 +63,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-            CSRF with remote Express Prototype
+          CSRF with remote Express Prototype
         </header>
         <p>{this.state.response}</p>
         <form onSubmit={this.handleSubmit}>
@@ -77,7 +77,7 @@ class App extends Component {
           />
           <button type="submit">Submit</button>
         </form>
-        <p>Server Response: <div dangerouslySetInnerHTML={{__html: this.state.responseToPost}} /></p>
+        <p>Server Response: <div dangerouslySetInnerHTML={{ __html: this.state.responseToPost }} /></p>
         <p>Token: [{this.state.csrfToken}]</p>
         <p>Request Header: [{this.state.requestHeader}]</p>
         <p>Server Cookies: [{this.state.serverCookies}]</p>
