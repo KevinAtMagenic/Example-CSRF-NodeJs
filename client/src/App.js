@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import csrfDispatcher from './utils/csrfDispatcher';
+import httpDispatcher from './utils/httpDispatcher';
 
 class App extends Component {
   state = {
@@ -10,44 +12,30 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.callApi()
+      csrfDispatcher.getCsrfToken()
       .then((res) => {
-        this.setState({ response: res.express, csrfToken: res.csrfToken});
-        // this.setState({ response: res.express, csrfToken: 'bogus'});
+        this.setState({ csrfToken: res});
       })
-      .catch(err => console.log(err));
+      //.catch(err => console.log(err));
   }
-
-  callApi = async () => {
-    const response = await fetch('/api/hello', {
-      credentials: "same-origin"
-    });
-    const body = await response.json();
-    if (response.status !== 200) { 
-      throw Error(body.message);
-    } else {
-      return body;
-    }    
-  };
 
   handleSubmit = async e => {
     e.preventDefault();
-    const response = await fetch('/api/world', {
+    
+    const request = {
       method: 'POST',
-      credentials: 'include', // <-- includes cookies in the request
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-Token': this.state.csrfToken
       },
-      body: JSON.stringify({ post: this.state.post }),
-    });
+      url: '/api/world',
+      data: {post:this.state.post}
+    };
 
-    if(response.status === "200") {
-      this.setState({ responseToPost: await response.text() });
-    }
-    else {
-      this.setState({ responseToPost: await response.text() });
-    }    
+    httpDispatcher.processRequest(request)
+    .then((response) => {
+      this.setState({ responseToPost: response.data });
+    });
   };
 
   render() {
